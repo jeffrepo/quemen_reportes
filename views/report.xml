@@ -1,0 +1,15 @@
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report
+            id="salidas_pasteleria"
+            string="Recibo de pago"
+            model="prueba_alumnos"
+            report_type="qweb-pdf"
+            file="quemen_reportes.recibo_pasteleria"
+            name="quemen_reportes.recibo_pasteleria"
+        />
+
+    </data>
+</openerp> -->
