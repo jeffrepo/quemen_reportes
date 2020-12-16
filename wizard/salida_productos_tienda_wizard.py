@@ -6,7 +6,10 @@ import logging
 import xlsxwriter
 import io
 import base64
-# import win32com.client as win32
+import dateutil.parser
+import datetime
+from datetime import date
+import dateutil.parser
 
 class PruebaWizard(models.TransientModel):
     # modelo es el _name
@@ -38,73 +41,44 @@ class PruebaWizard(models.TransientModel):
             merge_format = libro.add_format({'align': 'center'})
 
 
-            # set_column(first_col, last_col, width, cell_format, options)
-
             if w.consolidado_tienda==1:
                 listado_tiendas=[]
                 lista_conceptos=[]
                 lista_categoria=[]
-                lista_tiendas={}
                 transferencias_filtradas=[]
                 productos_filtrados=[]
 
                 s=", "
-                hoja.write(2, 2, 'Consolidado por Tienda')
-                # hoja.write(2, 3, w.consolidado_tienda[0])
-                hoja.write(6, 2, 'Tienda: ')
-
-                # inventario = self.env['stock.picking'].search([('picking_type_id', 'in', w.tipo_salida_ids.ids)])
-                # logging.warn(inventario)
-                logging.warn('Prueba Tiendas')
-                for tienda in w.tienda_ids:
-                    # lista_tiendas.append({'nombre_tienda' : tienda.name, 'id' : tienda.id , 'cantidad_productos' : 0})
-                    if tienda.id not in lista_tiendas:
-                        lista_tiendas[tienda.id] =  {'nombre_tienda' : tienda.name, 'id' : tienda.id , 'cantidad_productos' : 0}
-
-                logging.warn(lista_tiendas)
-
-                hoja.write(7, 2, 'Concepto:')
-
-                for concepto in w.tipo_salida_ids:
-                    lista_conceptos.append(concepto.name)
-                    # logging.warn(concepto)
-
-                hoja.write(7, 5, str(s.join(lista_conceptos)))
-
-
-                hoja.write(8, 2, 'Familia: ')
-                # hoja.write(8, 3, str(lista_tiendas=', '.join(w.categoria_ids)))
-
-                for categoria in w.categoria_ids:
-                    lista_categoria.append(categoria.name)
-                    # logging.warn(categoria)
-
-                hoja.write(8, 5, str(s.join(lista_categoria)))
 
                 transferencias = self.env['stock.picking'].search([('picking_type_id','in', w.tipo_salida_ids.ids),
                 ('scheduled_date','>=',str(w.fecha_inicio)),('scheduled_date','<=',str(w.fecha_final)), ('state', '=', 'done')])
-
+                logging.warn(transferencias)
                 listado_productos={}
 
                 for transferencia in transferencias:
-                    total=0
                     for linea in transferencia.move_ids_without_package:
                         if linea.product_id.id not in listado_productos:
+                            lista_tiendas={}
+                            for tienda in w.tienda_ids:
+                                if tienda.id not in lista_tiendas:
+                                    lista_tiendas[tienda.id] = {'nombre_tienda' : tienda.name, 'id' : tienda.id , 'cantidad_productos' : 0}
                             listado_productos[linea.product_id.id] = {'nombre_producto': linea.product_id.name, 'codigo': linea.product_id.default_code, 'tiendas': lista_tiendas}
+                            lista_tiendas={}
 
-                        listado_productos[linea.product_id.id]['tiendas'][transferencia.picking_type_id.warehouse_id.id]['cantidad_productos'] = linea.product_uom_qty
+
                 logging.warn(listado_productos)
-                        # for tienda in listado_productos[linea.product_id.id]['tiendas']:
-                        #     logging.warn(transferencia)
-                        #     logging.warn(tienda)
-                        #     logging.warn(linea.product_uom_qty)
-                        #     if int(transferencia.picking_type_id.warehouse_id.id) == int(tienda['id']):
-                        #         total += linea.product_uom_qty
-                        #         tienda['cantidad_productos'] += linea.product_uom_qty
+                for transferencia in transferencias:
+                    for linea in transferencia.move_ids_without_package:
+                        if linea.product_id.id in listado_productos:
+                            logging.warn(linea.product_id.id)
+                            logging.warn(linea.product_uom_qty)
+                            logging.warn(listado_productos[linea.product_id.id]['tiendas'])
+                            listado_productos[linea.product_id.id]['tiendas'][transferencia.picking_type_id.warehouse_id.id]['cantidad_productos'] += linea.product_uom_qty
+                            logging.warn(listado_productos[linea.product_id.id]['tiendas'])
 
 
-
-                # logging.warn(listado_productos)
+                logging.warn('Prueba general')
+                logging.warn(listado_productos)
 
                 # el siguiente codigo despues de "aux" hasta logging.warn(result) obtiene los objetos repetidos de una lista y en que posicion se encuentran
                 # aux = defaultdict(list)
@@ -112,8 +86,29 @@ class PruebaWizard(models.TransientModel):
                 #     aux[item].append(index)
                 # result = {item: indexs for item, indexs in aux.items() if len(indexs) > 1}
                 # logging.warn(result)
-
                 productos_filtrados1 = list(set(productos_filtrados))
+
+                hoja.write(2, 2, 'Consolidado por Tienda')
+                # hoja.write(2, 3, w.consolidado_tienda[0])
+                lista_tiendas_encabezado=[]
+                for tienda in w.tienda_ids:
+                    lista_tiendas_encabezado.append(tienda.name)
+                hoja.write(6, 4, str(s.join(lista_tiendas_encabezado)))
+
+                hoja.write(7, 2, 'Concepto:')
+
+                for concepto in w.tipo_salida_ids:
+                    lista_conceptos.append(concepto.name)
+
+                hoja.write(7, 5, str(s.join(lista_conceptos)))
+
+                hoja.write(8, 2, 'Familia: ')
+
+                for categoria in w.categoria_ids:
+                    lista_categoria.append(categoria.name)
+
+                hoja.write(8, 5, str(s.join(lista_categoria)))
+
 
                 hoja.write(9, 2, 'Fecha Inicio:')
                 hoja.write(9, 3, w.fecha_inicio, formato_fecha)
@@ -124,10 +119,10 @@ class PruebaWizard(models.TransientModel):
                 fila1=13
                 columna=2
                 columna1=3
-                # columna2=4
                 columna_tiendas=4
-                for store1 in lista_tiendas:
-                    hoja.write(13, columna_tiendas, str(store1['nombre_tienda']) )
+                hoja.write(6, 2, 'Tienda: ')
+                for store1 in lista_tiendas_encabezado:
+                    hoja.write(13, columna_tiendas, str(store1))
                     columna_tiendas += 1
 
 
@@ -135,15 +130,10 @@ class PruebaWizard(models.TransientModel):
                     hoja.write(fila, columna, str(listado_productos[clave]['codigo']))
                     hoja.write(fila, columna1, str(listado_productos[clave]['nombre_producto']))
                     columna_cantidad = 4
-
                     for store in listado_productos[clave]['tiendas']:
-                        # hoja.write(fila1, columna3, str(store['nombre_tienda']))
-                        hoja.write(fila, columna_cantidad, str(store['cantidad_productos']))
+                        hoja.write(fila, columna_cantidad, str(listado_productos[clave]['tiendas'][store]['cantidad_productos']))
                         columna_cantidad += 1
-                        # # hoja.write(filas, columnas, str(store['cantidad_productos']))
-                        # filas = filas +1
                     fila = fila + 1
-                    # logging.warn(str(clave) + ' -->' + str(listado_productos[clave]['codigo']))
 
 
 
@@ -152,53 +142,97 @@ class PruebaWizard(models.TransientModel):
                 lista_tiendas=[]
                 lista_categoria=[]
                 lista_conceptos=[]
-                hoja.write(1, 2, 'Consolidado por día')
-                # hoja.write(1, 3, w.consolidado_dia)
-                hoja.write(3, 5, 'Reporte de salida de productos por día')
-                hoja.write(4, 2, 'Tienda: ')
-
-                for tienda in w.tienda_ids:
-                    listado_tiendas.append(tienda.name)
-
+                transferencias_filtradas=[]
+                productos_filtrados=[]
+                listado_de_fechas=[]
                 s=", "
 
-                hoja.write(4, 5, str(s.join(listado_tiendas)))
-                hoja.write(5, 2, 'Concepto:')
+                hoja.write(1, 2, 'Consolidado por día')
+                hoja.write(3, 5, 'Reporte de salida de productos por día')
+                hoja.write(6, 2, 'Tienda: ')
+
+                for tienda in w.tienda_ids:
+                    lista_tiendas.append(tienda.name)
+
+                hoja.write(6, 5, str(s.join(lista_tiendas)))
+                hoja.write(7, 2, 'Concepto:')
 
                 for concepto in w.tipo_salida_ids:
                     lista_conceptos.append(concepto.name)
 
-                hoja.write(5, 5, str(s.join(lista_conceptos)))
+                hoja.write(7, 5, str(s.join(lista_conceptos)))
 
-
-                hoja.write(6, 2, 'Familia')
+                hoja.write(8, 2, 'Familia')
 
                 for categoria in w.categoria_ids:
                     lista_categoria.append(categoria.name)
 
-                hoja.write(6, 5, str(s.join(lista_categoria)))
-                hoja.write(7, 2, 'Fecha inicio')
-                hoja.write(7, 3, w.fecha_inicio, formato_fecha)
-                hoja.write(7, 5, w.fecha_final, formato_fecha)
-                hoja.write(9, 2, 'Clave')
-                hoja.write(9, 3, 'Descripcion')
-                hoja.write(10, 4, 'Lunes')
-                hoja.write(10, 5, 'Martes')
-                hoja.write(10, 6, 'Miercoles')
-                hoja.write(10, 7, 'Jueves')
-                hoja.write(10, 8, 'Viernes')
-                hoja.write(10, 9, 'Sabado')
-                hoja.write(10, 10, 'Domingo')
-                hoja.write(10, 11, 'Lunes')
-                hoja.write(9, 12, 'CANTIDAD')
-                hoja.write(9, 13, 'SUBTOTAL')
-                hoja.write(9, 14, 'IMPORTE')
+                hoja.write(8, 5, str(s.join(lista_categoria)))
+
+                hoja.write(10, 4, str(s.join(listado_de_fechas)))
+                hoja.write(9, 2, 'Fecha inicio')
+                hoja.write(9, 5, w.fecha_inicio, formato_fecha)
+                hoja.write(9, 8, w.fecha_final, formato_fecha)
+
+                transferencias = self.env['stock.picking'].search([('picking_type_id','in', w.tipo_salida_ids.ids),
+                ('scheduled_date','>=',str(w.fecha_inicio)),('scheduled_date','<=',str(w.fecha_final)), ('state', '=', 'done')], order='scheduled_date asc')
+                listado_productos={}
+
+                for transferencia in transferencias:
+                    for linea in transferencia.move_ids_without_package:
+                        if linea.product_id.id not in listado_productos:
+                            listado_fechas={}
+                            for fechas in transferencias:
+                                c = fechas.scheduled_date.strftime("%A")
+                                b = fechas.scheduled_date
+                                d = (b).date()
+                                if str(d) not in listado_fechas:
+                                    listado_fechas[str(d)]={'id' : tienda.id ,'fechas': str(d),'cantidad_productos' : 0}
+                            listado_productos[linea.product_id.id] = {'nombre_producto': linea.product_id.name, 'codigo': linea.product_id.default_code, 'fechas_totales': listado_fechas}
+                            listado_fechas={}
 
 
+            for transferencia in transferencias:
+                for linea in transferencia.move_ids_without_package:
+                    if linea.product_id.id in listado_productos:
+                        for fechas in transferencias:
+                            b = fechas.scheduled_date
+                            d = (b).date()
+                        listado_productos[linea.product_id.id]['fechas_totales'][str(d)]['cantidad_productos']+= linea.product_uom_qty
 
 
-            # hoja.set_colum(9, 2, width)
-            # hoja.Columns.AutoFit()
+            lista_fechas_encabezado={}
+            for day in transferencias:
+                d = day.scheduled_date.strftime("%A")
+                c = day.scheduled_date
+                e = (c).date()
+                logging.warn(d)
+                if str(e) not in lista_fechas_encabezado:
+                    lista_fechas_encabezado[str(e)]={'fecha': str(e), 'dia': d}
+            logging.warn('Listado de productos')
+            logging.warn(listado_productos)
+
+            fila = 14
+            hoja.write(12, 2, 'Codigo')
+            hoja.write(12, 3, 'Descripcion')
+            for pro in listado_productos:
+                hoja.write(fila, 2, str(listado_productos[pro]['codigo']))
+                hoja.write(fila, 3, str(listado_productos[pro]['nombre_producto']))
+                columna_cantidad = 4
+                for pro2 in listado_productos[pro]['fechas_totales']:
+                    hoja.write(fila, columna_cantidad, str(listado_productos[pro]['fechas_totales'][pro2]['cantidad_productos']))
+                    columna_cantidad += 1
+                fila+=1
+
+
+            columna = 4
+            for ti in lista_fechas_encabezado:
+                hoja.write(12, columna, str(lista_fechas_encabezado[ti]['fecha']))
+                hoja.write(13, columna, str(lista_fechas_encabezado[ti]['dia']))
+                columna +=1
+
+            logging.warn(lista_fechas_encabezado)
+
 
             libro.close()
             datos = base64.b64encode(f.getvalue())
