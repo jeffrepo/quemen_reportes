@@ -190,14 +190,15 @@ class PruebaWizard(models.TransientModel):
                             listado_fechas={}
 
 
-                for transferencia in transferencias:
-                    for linea in transferencia.move_ids_without_package:
-                        if linea.product_id.id in listado_productos:
-                            for fechas in transferencias:
-                                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-                                fe = fechas.scheduled_date.astimezone(timezone).date()
 
-                            listado_productos[linea.product_id.id]['fechas_totales'][str(fe)]['cantidad_productos']+= linea.product_uom_qty
+                for transferencia in transferencias:
+                    timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+                    fe = transferencia.scheduled_date.astimezone(timezone).date()
+                    for linea in transferencia.move_ids_without_package:
+                        logging.warn(str(fe))
+                        logging.warn(linea.product_id.id)
+                        logging.warn(linea.product_uom_qty)
+                        listado_productos[linea.product_id.id]['fechas_totales'][str(fe)]['cantidad_productos']+= linea.product_uom_qty
 
 
                 lista_fechas_encabezado={}
