@@ -10,6 +10,7 @@ import dateutil.parser
 import datetime
 from datetime import date
 import dateutil.parser
+import pytz
 
 class PruebaWizard(models.TransientModel):
     # modelo es el _name
@@ -89,7 +90,6 @@ class PruebaWizard(models.TransientModel):
                 productos_filtrados1 = list(set(productos_filtrados))
 
                 hoja.write(2, 2, 'Consolidado por Tienda')
-                # hoja.write(2, 3, w.consolidado_tienda[0])
                 lista_tiendas_encabezado=[]
                 for tienda in w.tienda_ids:
                     lista_tiendas_encabezado.append(tienda.name)
@@ -134,8 +134,6 @@ class PruebaWizard(models.TransientModel):
                         hoja.write(fila, columna_cantidad, str(listado_productos[clave]['tiendas'][store]['cantidad_productos']))
                         columna_cantidad += 1
                     fila = fila + 1
-
-
 
 
             if w.consolidado_dia==1:
@@ -183,55 +181,57 @@ class PruebaWizard(models.TransientModel):
                         if linea.product_id.id not in listado_productos:
                             listado_fechas={}
                             for fechas in transferencias:
-                                c = fechas.scheduled_date.strftime("%A")
-                                b = fechas.scheduled_date
-                                d = (b).date()
-                                if str(d) not in listado_fechas:
-                                    listado_fechas[str(d)]={'id' : tienda.id ,'fechas': str(d),'cantidad_productos' : 0}
+                                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+                                b = fechas.scheduled_date.astimezone(timezone).date()
+                                c = b.strftime("%A")
+                                if str(b) not in listado_fechas:
+                                    listado_fechas[str(b)]={'id' : tienda.id ,'fechas': str(b),'cantidad_productos' : 0}
                             listado_productos[linea.product_id.id] = {'nombre_producto': linea.product_id.name, 'codigo': linea.product_id.default_code, 'fechas_totales': listado_fechas}
                             listado_fechas={}
 
 
-            for transferencia in transferencias:
-                for linea in transferencia.move_ids_without_package:
-                    if linea.product_id.id in listado_productos:
-                        for fechas in transferencias:
-                            b = fechas.scheduled_date
-                            d = (b).date()
-                        listado_productos[linea.product_id.id]['fechas_totales'][str(d)]['cantidad_productos']+= linea.product_uom_qty
+                for transferencia in transferencias:
+                    for linea in transferencia.move_ids_without_package:
+                        if linea.product_id.id in listado_productos:
+                            for fechas in transferencias:
+                                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+                                fe = fechas.scheduled_date.astimezone(timezone).date()
+
+                            listado_productos[linea.product_id.id]['fechas_totales'][str(fe)]['cantidad_productos']+= linea.product_uom_qty
 
 
-            lista_fechas_encabezado={}
-            for day in transferencias:
-                d = day.scheduled_date.strftime("%A")
-                c = day.scheduled_date
-                e = (c).date()
-                logging.warn(d)
-                if str(e) not in lista_fechas_encabezado:
-                    lista_fechas_encabezado[str(e)]={'fecha': str(e), 'dia': d}
-            logging.warn('Listado de productos')
-            logging.warn(listado_productos)
-
-            fila = 14
-            hoja.write(12, 2, 'Codigo')
-            hoja.write(12, 3, 'Descripcion')
-            for pro in listado_productos:
-                hoja.write(fila, 2, str(listado_productos[pro]['codigo']))
-                hoja.write(fila, 3, str(listado_productos[pro]['nombre_producto']))
-                columna_cantidad = 4
-                for pro2 in listado_productos[pro]['fechas_totales']:
-                    hoja.write(fila, columna_cantidad, str(listado_productos[pro]['fechas_totales'][pro2]['cantidad_productos']))
-                    columna_cantidad += 1
-                fila+=1
+                lista_fechas_encabezado={}
+                for day in transferencias:
+                    timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+                    fec = day.scheduled_date.astimezone(timezone).date()
+                    fec1 = fec.strftime("%A")
+                    if str(fec) not in lista_fechas_encabezado:
+                        lista_fechas_encabezado[str(fec)]={'fecha': str(fec), 'dia': fec1}
 
 
-            columna = 4
-            for ti in lista_fechas_encabezado:
-                hoja.write(12, columna, str(lista_fechas_encabezado[ti]['fecha']))
-                hoja.write(13, columna, str(lista_fechas_encabezado[ti]['dia']))
-                columna +=1
+                logging.warn('Listado de productos')
+                logging.warn(listado_productos)
 
-            logging.warn(lista_fechas_encabezado)
+                fila = 14
+                hoja.write(12, 2, 'Codigo')
+                hoja.write(12, 3, 'Descripcion')
+                for pro in listado_productos:
+                    hoja.write(fila, 2, str(listado_productos[pro]['codigo']))
+                    hoja.write(fila, 3, str(listado_productos[pro]['nombre_producto']))
+                    columna_cantidad = 4
+                    for pro2 in listado_productos[pro]['fechas_totales']:
+                        hoja.write(fila, columna_cantidad, str(listado_productos[pro]['fechas_totales'][pro2]['cantidad_productos']))
+                        columna_cantidad += 1
+                    fila+=1
+
+
+                columna = 4
+                for ti in lista_fechas_encabezado:
+                    hoja.write(12, columna, str(lista_fechas_encabezado[ti]['fecha']))
+                    hoja.write(13, columna, str(lista_fechas_encabezado[ti]['dia']))
+                    columna +=1
+
+                logging.warn(lista_fechas_encabezado)
 
 
             libro.close()
