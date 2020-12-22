@@ -11,9 +11,9 @@ Tienda de pasteles...
     """,
     'category':'Pasteles',
     'website': '',
-    'depends': ['base','point_of_sale'],
+    'depends': ['base','point_of_sale', 'purchase', 'sale', 'stock'],
     'data': [
-        # 'views/pastelera_views.xml',
+        'views/quemen_view.xml',
         'views/salida_productos_tienda_wizard_view.xml',
     ],
     'demo':[

@@ -21,9 +21,7 @@ class PruebaWizard(models.TransientModel):
     fecha_final = fields.Datetime('Fecha final')
     archivo = fields.Binary('Archivo')
     name = fields.Char('File Name', size=32)
-    # tipo_salida_ids = fields.Selection([ ('type1', 'Type 1'),('type2', 'Type 2'),],'Type', default = 'type1')
     tipo_salida_ids = fields.Many2many('stock.picking.type','quemen_reportes_tipo_rel',string="Tipo de salida")
-    # fields.Many2many('stock.picking.type','quemen_reportes_tipo_rel',string="Tipo de salida")
     categoria_ids = fields.Many2many('product.category','quemen_reportes_categoria_rel',string="Categoria")
     consolidado_tienda = fields.Boolean(string="Consolidado por tienda")
     consolidado_dia = fields.Boolean(string="Consolidado por día")
@@ -81,12 +79,6 @@ class PruebaWizard(models.TransientModel):
                 logging.warn('Prueba general')
                 logging.warn(listado_productos)
 
-                # el siguiente codigo despues de "aux" hasta logging.warn(result) obtiene los objetos repetidos de una lista y en que posicion se encuentran
-                # aux = defaultdict(list)
-                # for index , item in enumerate(productos_filtrados):
-                #     aux[item].append(index)
-                # result = {item: indexs for item, indexs in aux.items() if len(indexs) > 1}
-                # logging.warn(result)
                 productos_filtrados1 = list(set(productos_filtrados))
 
                 hoja.write(2, 2, 'Consolidado por Tienda')
@@ -180,8 +172,8 @@ class PruebaWizard(models.TransientModel):
                     for linea in transferencia.move_ids_without_package:
                         if linea.product_id.id not in listado_productos:
                             listado_fechas={}
+                            timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
                             for fechas in transferencias:
-                                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
                                 b = fechas.scheduled_date.astimezone(timezone).date()
                                 c = b.strftime("%A")
                                 if str(b) not in listado_fechas:
