@@ -15,6 +15,7 @@ Tienda de pasteles...
     'data': [
         'views/quemen_view.xml',
         'views/salida_productos_tienda_wizard_view.xml',
+        'views/quemen_ventas_anual_wizard_view.xml'
     ],
     'demo':[
 

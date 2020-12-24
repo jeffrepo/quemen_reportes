@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record  model="ir.ui.view" id="view_form_quemen_metas">
+    <field name="name">view.form.quemen.metas</field>
+      <field name="model">quemen.metas</field>
+      <field name="arch" type="xml">
+        <form string="Sedes Form">
+              <sheet>
+                  <group>
+                      <field name="tienda_almacen_id"/>
+                      <field name="fecha"/>
+                      <field name="linea_ids">
+
+                        <tree editable="bottom">
+                          <field name="categoria_id"/>
+                          <field name="meta"/>
+                        </tree>
+                      </field>
+                  </group>
+              </sheet>
+          </form>
+      </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="action_quemen">
+      <field name="name">quemen.metas</field>
+      <field name="res_model">quemen.metas</field>
+      <!-- <field name="view_type">form</field> -->
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Click para agregar algo
+          </p>
+      </field>
+  </record>
+
+
+
+  <!-- Menu padre -->
+    <menuitem
+
+        id="quemen_menu_item"
+        name="quemen"
+        parent="point_of_sale.menu_point_root"
+        sequence="100"/>
+  <!-- Menu hijo -->
+    <menuitem
+        id="quemen_menu_item_submenu"
+        name="submenu"
+        parent="quemen_menu_item"
+        action = "action_quemen"
+        sequence="25"/>
+
+
+</odoo>
