@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <data>
-  <record id="view_form_salida_productos_tienda_wizard" model="ir.ui.view">
+  <record id="view_form_quemen_ventas_anual_wizard" model="ir.ui.view">
       <field name="name">view.form.quemen_ventas_anual_wizard</field>
       <field name="model">quemen_reportes.quemen_ventas_anual.wizard</field>
       <field name="arch" type="xml">
