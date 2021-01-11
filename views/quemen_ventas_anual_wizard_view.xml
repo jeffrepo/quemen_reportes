@@ -37,7 +37,7 @@
       view_mode="form"
       target="new"
       />
-
+    <!-- hola   -->
     <menuitem
       action="action_reporte_anual_tiendas"
       id="quemen_reportes_anuales"
