@@ -17,8 +17,8 @@ class PruebaWizard(models.TransientModel):
     _name = 'quemen_reportes.salida_productos_tienda.wizard'
     _description = "Reporte para pasteleria "
 
-    fecha_inicio = fields.Datetime('Fecha inicio')
-    fecha_final = fields.Datetime('Fecha final')
+    fecha_inicio = fields.Date('Fecha inicio')
+    fecha_final = fields.Date('Fecha final')
     archivo = fields.Binary('Archivo')
     name = fields.Char('File Name', size=32)
     tipo_salida_ids = fields.Many2many('stock.picking.type','quemen_reportes_tipo_rel',string="Tipo de salida")
@@ -123,7 +123,7 @@ class PruebaWizard(models.TransientModel):
                     hoja.write(fila, columna1, str(listado_productos[clave]['nombre_producto']))
                     columna_cantidad = 4
                     for store in listado_productos[clave]['tiendas']:
-                        hoja.write(fila, columna_cantidad, str(listado_productos[clave]['tiendas'][store]['cantidad_productos']))
+                        hoja.write(fila, columna_cantidad, str(int(listado_productos[clave]['tiendas'][store]['cantidad_productos'])))
                         columna_cantidad += 1
                     fila = fila + 1
 
@@ -213,7 +213,7 @@ class PruebaWizard(models.TransientModel):
                     hoja.write(fila, 3, str(listado_productos[pro]['nombre_producto']))
                     columna_cantidad = 4
                     for pro2 in listado_productos[pro]['fechas_totales']:
-                        hoja.write(fila, columna_cantidad, str(listado_productos[pro]['fechas_totales'][pro2]['cantidad_productos']))
+                        hoja.write(fila, columna_cantidad, str(int(listado_productos[pro]['fechas_totales'][pro2]['cantidad_productos'])))
                         columna_cantidad += 1
                     fila+=1
 

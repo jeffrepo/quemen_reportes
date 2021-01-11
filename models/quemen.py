@@ -5,15 +5,16 @@ from odoo import api, fields, models
 
 class QuemenMetas(models.Model):
     _name = "quemen.metas"
-    _description = "test"
+    _description = "Metas de pos quemen"
+
     linea_ids = fields.One2many('quemen.metas.linea', 'meta_id', 'linea')
-    tienda_almacen_id = fields.Many2one('pos.config', 'tienda')
-    fecha = fields.Datetime('fecha')
+    tienda_almacen_id = fields.Many2one('pos.config', 'Tienda')
+    fecha = fields.Date('Fecha')
 
 class QuemenMetasLinea(models.Model):
-
     _name = "quemen.metas.linea"
-    _description="test2"
-    meta_id = fields.Many2one('quemen.metas', 'meta')
-    categoria_id = fields.Many2one('categ_id', 'categoria')
-    meta = fields.Float('metas')
+    _description="lineas de metas pos quemen"
+
+    meta_id = fields.Many2one('quemen.metas', 'Meta')
+    categoria_id = fields.Many2one('product.category', 'Categoria')
+    metaTotal = fields.Float('metas')

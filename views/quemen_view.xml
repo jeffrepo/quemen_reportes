@@ -14,10 +14,11 @@
 
                         <tree editable="bottom">
                           <field name="categoria_id"/>
-                          <field name="meta"/>
+                          <field name="metaTotal"/>
                         </tree>
                       </field>
                   </group>
+
               </sheet>
           </form>
       </field>
@@ -30,11 +31,45 @@
       <field name="view_mode">tree,form</field>
       <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-              Click para agregar algo
+              Clic para agregar algo
           </p>
       </field>
   </record>
 
+  <record  model="ir.ui.view" id="view_form_quemen_historial_pos">
+    <field name="name">view.form.quemen.historial_pos</field>
+      <field name="model">quemen.historial_pos</field>
+      <field name="arch" type="xml">
+        <form string="Sedes Form">
+              <sheet>
+                  <group>
+                      <field name="punto_venta"/>
+                      <field name="fecha_inicio"/>
+                      <field name="linea_ids">
+
+                        <tree editable="bottom">
+                          <field name="categoria_id"/>
+                          <field name="piezas"/>
+                          <field name="ventas"/>
+                        </tree>
+                      </field>
+                  </group>
+              </sheet>
+          </form>
+      </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="action_quemen_historial">
+      <field name="name">quemen.historial_pos</field>
+      <field name="res_model">quemen.historial_pos</field>
+      <!-- <field name="view_type">form</field> -->
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Clic para agregar algo
+          </p>
+      </field>
+  </record>
 
 
   <!-- Menu padre -->
@@ -47,10 +82,17 @@
   <!-- Menu hijo -->
     <menuitem
         id="quemen_menu_item_submenu"
-        name="submenu"
+        name="Metas"
         parent="quemen_menu_item"
         action = "action_quemen"
         sequence="25"/>
+
+    <menuitem
+      id="quemen_menu_item_historial"
+      name="Historial"
+      parent="quemen_menu_item"
+      action = "action_quemen_historial"
+      sequence="35"/>
 
 
 </odoo>
