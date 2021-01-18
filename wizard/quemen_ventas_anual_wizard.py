@@ -32,29 +32,49 @@ class VentasAnuales(models.TransientModel):
             merge_format = libro.add_format({'align': 'center'})
 
             pedidos = self.env['pos.order'].search([('date_order','>=',str(w.fecha_inicio)),('date_order','<=',str(w.fecha_final))])
-            logging.warn('Listado de fechas')
+            logging.warn('Listado de pos.order')
             logging.warn(pedidos)
             listado_categorias={}
             listado_productos={}
             productos=[]
-            metas=[]
-
+            totalImporte=0
+            ventasTotales=0
+            cumplidoFinal=0
+            cumplidoCategoria=0
+            totalPzas=0
+            totalMeta=0
+            sumaPiezas=0
+            sumaVentas=0
+            sumaMetas=0
+            metaFinal=0
+            fecha1=w.fecha_final
+            fechaFinal=fecha1.strftime('%d,%m,%Y')
             for pedido in pedidos:
+                unaFecha=pedido.date_order
+                fechaPedido=unaFecha.strftime('%d,%m,%Y')
                 if pedido.config_id.id in w.tienda_ids.ids:
                     for lineas in pedido.lines:
                         if lineas.product_id.categ_id.id not in listado_categorias:
+                            listado_categorias[lineas.product_id.categ_id.id]={'nombre_categoria': lineas.product_id.categ_id.name, 'productos':[], 'totalImporte':0, 'metas':0, 'cumplidoCategoria':0,'totalPzas':0, 'ventasTotales':0, 'totalMeta':0, 'cumplidoFinal': 0}
                             metas = self.env['quemen.metas'].search([('fecha','>=',str(w.fecha_inicio)),('fecha','<=',str(w.fecha_final))])
                             for meta in metas:
                                 if meta.tienda_almacen_id.id in w.tienda_ids.ids:
                                     for lin in meta.linea_ids:
-                                        if meta.linea_ids.metaTotal not in listado_categorias:
-                                            logging.warn(meta.linea_ids.metaTotal)
-                                            # logging.warn('listado de metas')
-                                            # logging.warn(lin.metaTotal)
-                                            # hacer serch quemen metas comparar fecha y tienda
-                                            listado_categorias[lineas.product_id.categ_id.id]={'nombre_categoria': lineas.product_id.categ_id.name, 'productos':[], 'metas':[]}
-                                    listado_categorias[lineas.product_id.categ_id.id]['productos'].append({'nombre':lineas.product_id.name, 'piezas': lineas.qty, 'monto': pedido.amount_total})
-                                    listado_categorias[lineas.product_id.categ_id.id]['metas'].append({'monto':lin.metaTotal})
+                                        if lin.categoria_id.id == lineas.product_id.categ_id.id:
+                                            if lin.categoria_id not in listado_categorias:
+                                                listado_categorias[lineas.product_id.categ_id.id]['metas']=lin.metaTotal
+                        listado_categorias[lineas.product_id.categ_id.id]['totalImporte']+=lineas.price_subtotal_incl
+                        listado_categorias[lineas.product_id.categ_id.id]['cumplidoCategoria']=round((listado_categorias[lineas.product_id.categ_id.id]['totalImporte']/listado_categorias[lineas.product_id.categ_id.id]['metas'])*100,2)
+                    listado_categorias[lineas.product_id.categ_id.id]['productos'].append({'nombre':lineas.product_id.name, 'piezas': lineas.qty, 'monto': pedido.amount_total})
+                    if fechaPedido == fechaFinal:
+                        sumaPiezas+=lineas.qty
+                        sumaVentas+=lineas.price_subtotal_incl
+                        sumaMetas+=lin.metaTotal
+                        metaFinal=lin.metaTotal
+                    listado_categorias[lineas.product_id.categ_id.id]['totalMeta']=sumaMetas
+                    listado_categorias[lineas.product_id.categ_id.id]['totalPzas']=sumaPiezas
+                    listado_categorias[lineas.product_id.categ_id.id]['ventasTotales']=sumaVentas
+                    listado_categorias[lineas.product_id.categ_id.id]['cumplidoFinal']=round((listado_categorias[lineas.product_id.categ_id.id]['ventasTotales']/listado_categorias[lineas.product_id.categ_id.id]['metas'])*100,2)
 
 
 

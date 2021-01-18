@@ -17,8 +17,8 @@ class PruebaWizard(models.TransientModel):
     _name = 'quemen_reportes.salida_productos_tienda.wizard'
     _description = "Reporte para pasteleria "
 
-    fecha_inicio = fields.Datetime('Fecha inicio')
-    fecha_final = fields.Datetime('Fecha final')
+    fecha_inicio = fields.Date('Fecha inicio')
+    fecha_final = fields.Date('Fecha final')
     archivo = fields.Binary('Archivo')
     name = fields.Char('File Name', size=32)
     tipo_salida_ids = fields.Many2many('stock.picking.type','quemen_reportes_tipo_rel',string="Tipo de salida")
