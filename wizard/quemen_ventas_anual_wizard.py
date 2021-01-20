@@ -18,10 +18,7 @@ class VentasAnuales(models.TransientModel):
     name = fields.Char('File Name', size=32)
     archivo = fields.Binary('Archivo')
 
-
     def generar_excel(self):
-
-
 
         for w in self:
             f = io.BytesIO()
@@ -32,30 +29,37 @@ class VentasAnuales(models.TransientModel):
             merge_format = libro.add_format({'align': 'center'})
 
             pedidos = self.env['pos.order'].search([('date_order','>=',str(w.fecha_inicio)),('date_order','<=',str(w.fecha_final))])
-            logging.warn('Listado de pos.order')
-            logging.warn(pedidos)
+            atrasInicio=w.fecha_inicio
+            atras=atrasInicio.year-1
+            fFechaInicioDM=atrasInicio.strftime('%d,%m')
+            añoAtras=fFechaInicioDM+","+str(atras)
+            atrasFinal=w.fecha_final
+            atras1=atrasFinal.year-1
+            fFechaFinalDM=atrasFinal.strftime('%d,%m')
+            añoAtrasF=fFechaFinalDM+","+str(atras1)
+            pedidosAtras=self.env['pos.order'].search([('date_order','>=',str(añoAtras)),('date_order','<=',str(añoAtrasF))])
+            logging.warn(pedidosAtras)
             listado_categorias={}
             listado_productos={}
             productos=[]
             totalImporte=0
             ventasTotales=0
-            cumplidoFinal=0
             cumplidoCategoria=0
             totalPzas=0
+            totPzasAñoP=0
+            tp=0
             totalMeta=0
-            sumaPiezas=0
             sumaVentas=0
-            sumaMetas=0
-            metaFinal=0
             fecha1=w.fecha_final
             fechaFinal=fecha1.strftime('%d,%m,%Y')
             for pedido in pedidos:
                 unaFecha=pedido.date_order
                 fechaPedido=unaFecha.strftime('%d,%m,%Y')
+                añoActual=unaFecha.strftime('%Y')
                 if pedido.config_id.id in w.tienda_ids.ids:
                     for lineas in pedido.lines:
                         if lineas.product_id.categ_id.id not in listado_categorias:
-                            listado_categorias[lineas.product_id.categ_id.id]={'nombre_categoria': lineas.product_id.categ_id.name, 'productos':[], 'totalImporte':0, 'metas':0, 'cumplidoCategoria':0,'totalPzas':0, 'ventasTotales':0, 'totalMeta':0, 'cumplidoFinal': 0}
+                            listado_categorias[lineas.product_id.categ_id.id]={'nombre_categoria': lineas.product_id.categ_id.name, 'productos':[], 'totalImporte':0, 'metas':0, 'cumplidoCategoria':0,'totalPzas':0, 'ventasTotales':0, 'totPzasAñoP':0}
                             metas = self.env['quemen.metas'].search([('fecha','>=',str(w.fecha_inicio)),('fecha','<=',str(w.fecha_final))])
                             for meta in metas:
                                 if meta.tienda_almacen_id.id in w.tienda_ids.ids:
@@ -63,20 +67,20 @@ class VentasAnuales(models.TransientModel):
                                         if lin.categoria_id.id == lineas.product_id.categ_id.id:
                                             if lin.categoria_id not in listado_categorias:
                                                 listado_categorias[lineas.product_id.categ_id.id]['metas']=lin.metaTotal
-                        listado_categorias[lineas.product_id.categ_id.id]['totalImporte']+=lineas.price_subtotal_incl
+                                                # listado_categorias[lineas.product_id.categ_id.id]['totalMeta']+=lin.metaTotal
+                        listado_categorias[lineas.product_id.categ_id.id]['totalImporte']+=round(lineas.price_subtotal_incl, 2)
                         listado_categorias[lineas.product_id.categ_id.id]['cumplidoCategoria']=round((listado_categorias[lineas.product_id.categ_id.id]['totalImporte']/listado_categorias[lineas.product_id.categ_id.id]['metas'])*100,2)
                     listado_categorias[lineas.product_id.categ_id.id]['productos'].append({'nombre':lineas.product_id.name, 'piezas': lineas.qty, 'monto': pedido.amount_total})
                     if fechaPedido == fechaFinal:
-                        sumaPiezas+=lineas.qty
                         sumaVentas+=lineas.price_subtotal_incl
-                        sumaMetas+=lin.metaTotal
-                        metaFinal=lin.metaTotal
-                    listado_categorias[lineas.product_id.categ_id.id]['totalMeta']=sumaMetas
-                    listado_categorias[lineas.product_id.categ_id.id]['totalPzas']=sumaPiezas
-                    listado_categorias[lineas.product_id.categ_id.id]['ventasTotales']=sumaVentas
-                    listado_categorias[lineas.product_id.categ_id.id]['cumplidoFinal']=round((listado_categorias[lineas.product_id.categ_id.id]['ventasTotales']/listado_categorias[lineas.product_id.categ_id.id]['metas'])*100,2)
-
-
+                    listado_categorias[lineas.product_id.categ_id.id]['ventasTotales']=round(sumaVentas,2)
+                    listado_categorias[lineas.product_id.categ_id.id]['totalPzas']+=lineas.qty
+            for pedidosA in pedidosAtras:
+                if pedidosA.config_id.id in w.tienda_ids.ids:
+                    for lineas1 in pedidosA.lines:
+                        tp+=lineas1.qty
+                        # listado_categorias[lineas1.product_id.categ_id.id]={'totPzasAñoP':0}
+                        listado_categorias[lineas1.product_id.categ_id.id]['totPzasAñoP']=tp
 
             logging.warn(listado_categorias)
         libro.close()
