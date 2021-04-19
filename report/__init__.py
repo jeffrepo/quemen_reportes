@@ -3,3 +3,4 @@
 
 from . import salida_productos_tienda
 from . import recibo_pasteleria
+from . import reporte_produccion

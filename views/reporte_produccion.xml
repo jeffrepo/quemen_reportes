@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <report
+      id = "reporte_produccion1"
+      string = "Reporte de produccion"
+      model = "mrp.production"
+      report_type = "qweb-pdf"
+      file= "quemen_reportes.reporte_produccion_productos"
+      name= "quemen_reportes.reporte_produccion_productos"
+      />
+
+  </data>
+
+</odoo>

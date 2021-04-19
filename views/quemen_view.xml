@@ -74,7 +74,6 @@
 
   <!-- Menu padre -->
     <menuitem
-
         id="quemen_menu_item"
         name="quemen"
         parent="point_of_sale.menu_point_root"
