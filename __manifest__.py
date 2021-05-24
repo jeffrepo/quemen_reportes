@@ -18,7 +18,13 @@ Tienda de pasteles...
         'views/quemen_ventas_anual_wizard_view.xml',
         'views/pos_config_views.xml',
         'views/reporte_produccion.xml',
-        'views/reporte_productos.xml'
+        'views/reporte_productos.xml',
+        'views/reporte_sesion.xml',
+        'data/paperformat_ticket.xml',
+        'views/informe_sesiones.xml',
+        'views/reporte_ticket.xml',
+        'views/informe_ticket.xml'
+
 
     ],
     'demo':[

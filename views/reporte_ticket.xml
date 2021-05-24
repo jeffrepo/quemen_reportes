@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <report
+      id="reporte_ticket"
+      string="Reporte de ticket"
+      model="pos.session"
+      report_type="qweb-pdf"
+      file="quemen_reportes.reporte_ticket_ventas_informes"
+      name="quemen_reportes.reporte_ticket_ventas_informes"
+      paperformat="paperformat_ticket"
+      />
+
+  </data>
+</odoo>

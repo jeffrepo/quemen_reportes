@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="reporte_sesion_ventas_informes">
+
+    <t t-call='web.basic_layout'>
+      <div class ="page">
+        <H4 align="center"><strong>MAQUILADORA PASTELERA S.A. DE C.V.</strong></H4>
+        <H6 align="center">CORTE DE CAJA</H6>
+        <br></br>
+        <t t-set="retorno_productos_sesiones" t-value="sesiones(docs)"/>
+        <t t-set="listado_totales" t-value="retorno_productos_sesiones['listado_totales']"/>
+        <t t-set="listado_productos" t-value="retorno_productos_sesiones['listado_productos']"/>
+        <t t-set="listado_notas_credito" t-value="retorno_productos_sesiones['listado_notas_credito']"/>
+        <t t-set="listado_facturas_globales" t-value="retorno_productos_sesiones['listado_facturas_globales']"/>
+        <t t-set="listado_facturas_expedidas" t-value="retorno_productos_sesiones['listado_facturas_expedidas']"/>
+        <t t-set="metodos_pago" t-value="retorno_productos_sesiones['metodos_pago']"/>
+        <t t-set="listado_retiros" t-value="retorno_productos_sesiones['listado_retiros']"/>
+        <t t-set="listado_cancelados" t-value="retorno_productos_sesiones['listado_cancelados']"/>
+        <t t-foreach="docs" t-as="o">
+
+          <table style="width:100%;">
+            <tbody>
+
+              <tr height="35">
+                <th >Cajero:</th>
+                <td colspan="3"><span t-field="o.user_id"/></td>
+              </tr>
+              <tr height="35">
+                <th >Sucursal:</th>
+                <td colspan="3"><span t-field="o.config_id"/></td>
+              </tr>
+              <tr height="50">
+                <th >Fecha:</th>
+                <td colspan="3"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')"/></td>
+              </tr>
+
+              <tr height="35">
+                <th colspan="4">Desglose de total de Venta</th>
+              </tr>
+
+              <tr height="15">
+                <th colspan="3" style="background-color:silver;color:black;">Concepto</th>
+                <th style="background-color:silver;color:black;">Folios</th>
+                <th colspan="2" style="background-color:silver;color:black; text-align:right">Importe<![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th colspan="2" style="background-color:silver;color:black; text-align:right">Descuento<![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th colspan="4" style="background-color:silver;color:black; text-align:right">Total<![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></th>
+              </tr>
+
+              <tr height="10" >
+                <th colspan="3"></th>
+              </tr>
+
+              <tr height="15">
+                <td colspan="3">Ventas de mostrador (contado)</td>
+                <td t-foreach="listado_totales" t-as="ti"><span t-esc="ti['folios_concatenados']"/></td>
+                <td colspan="2" t-foreach="listado_totales" t-as="ti" align="right"><span t-esc="ti['importe']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="2" t-foreach="listado_totales" t-as="ti" align="right"><span t-esc="ti['total_columna_descuento']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="4" t-foreach="listado_totales" t-as="ti" align="right"><span t-esc="ti['total_ventas_mostrador']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+              </tr>
+
+              <tr height="15">
+                <td colspan="3">Notas de crédito</td>
+                <td ></td>
+                <td colspan="2" t-foreach="listado_totales" t-as="ti" align="right"><span t-esc="ti['total_importe_credito']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="2" t-foreach="listado_totales" t-as="ti" align="right"><span t-esc="ti['total_descuento_credito']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="4" t-foreach="listado_totales" t-as="ti" align="right"><span t-esc="ti['total_nota_credito']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+              </tr>
+
+              <tr height="25">
+                <th colspan="3"></th>
+                <td ></td>
+                <td ></td>
+                <td colspan="2">Total de caja</td>
+                <th colspan="4" t-foreach="listado_totales" t-as="ti" style="text-align:right"><span t-esc="ti['total_desglose_venta']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="3">Cuentas por cobrar</th>
+              </tr>
+
+              <tr height="15">
+                <th colspan="3" style="background-color:silver;color:black;">Concepto</th>
+                <th style="background-color:silver;color:black;">Folios</th>
+                <th colspan="2" style="background-color:silver;color:black; text-align: right" >Importe<![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th colspan="2" style="background-color:silver;color:black; text-align: right" >Descuento<![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th colspan="4" style="background-color:silver;color:black; text-align: right" >Total<![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></th>
+              </tr>
+
+              <tr height="70" >
+                <th colspan="3"></th>
+              </tr>
+
+              <tr height="25" >
+                <th colspan="3"></th>
+                <td ></td>
+                <td colspan="3" align="right">Total de por cobrar</td>
+                <td ></td>
+                <td colspan="4"></td>
+              </tr>
+
+              <tr height="45">
+                <th colspan="3">Detalles de total de ventas</th>
+              </tr>
+
+              <tr height="35" >
+                <th colspan="4"> Relación de ventas de Mostrador por Ticket</th>
+              </tr>
+
+              <tr height="15">
+                <th style="background-color:silver;color:black;font-size:65%;">Serie</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:center">Folio</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">Ventas al 0%</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">Descuento 0%</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">Ventas al 16%</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">Descuento al 16%</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">Descuento</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">IVA</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">Total</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:center">FP</th>
+                <th style="background-color:silver;color:black;font-size:65%; text-align:right">E</th>
+              </tr>
+
+              <tr height="25" t-foreach="listado_productos" t-as="p">
+                <td style="font-size:65%"><span t-esc="p['serie']"/></td>
+                <td style="font-size:65%"><span t-esc="p['folio']"/></td>
+                <td style="font-size:65%" align="right"><span t-esc="p['ventas_sin_iva']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td style="font-size:65%" align="right"><span t-esc="p['descuento_sin_iva']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td style="font-size:65%" align="right"><span t-esc="p['ventas_iva']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td style="font-size:65%" align="right"><span t-esc="p['descuento_iva']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td style="font-size:65%" align="right"><span t-esc="p['descuento']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td style="font-size:65%" align="right"><span t-esc="p['iva']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td style="font-size:65%" align="right"><span t-esc="p['total']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td style="font-size:65%" align="center"><span t-esc="p['fp']"/></td>
+                <td ></td>
+              </tr>
+
+              <tr height="7">
+                <th colspan="3"></th>
+              </tr>
+
+              <tr height="45">
+                <td colspan="2">Totales</td>
+                <th t-foreach="listado_totales" t-as="t" style="font-size:70%; text-align:right"><span t-esc="t['total_columnas_ventas_sin_iva']" t-options = '{"widget": "float", "precision": 2}'/></th>
+                <th t-foreach="listado_totales" t-as="t" style="font-size:70%; text-align:right"><span t-esc="t['total_columnas_descuento_sin_iva']" t-options = '{"widget": "float", "precision": 2}'/></th>
+                <th t-foreach="listado_totales" t-as="t" style="font-size:70%; text-align:right"><span t-esc="t['total_columnas_ventas_iva']" t-options = '{"widget": "float", "precision": 2}'/></th>
+                <th t-foreach="listado_totales" t-as="t" style="font-size:70%; text-align:right"><span t-esc="t['total_columnas_descuento_iva']" t-options = '{"widget": "float", "precision": 2}'/></th>
+                <th t-foreach="listado_totales" t-as="t" style="font-size:70%; text-align:right"><span t-esc="t['total_columna_descuento']" t-options = '{"widget": "float", "precision": 2}'/></th>
+                <th t-foreach="listado_totales" t-as="t" style="font-size:70%; text-align:right"><span t-esc="t['total_columna_iva']" t-options = '{"widget": "float", "precision": 2}'/></th>
+                <th t-foreach="listado_totales" t-as="t" style="font-size:70%; text-align:right"><span t-esc="t['total_columna_total']" t-options = '{"widget": "float", "precision": 2}'/></th>
+                <th ></th>
+                <th ></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="5">Relación de ventas de pedido especial</th>
+              </tr>
+
+              <tr height="15">
+                <th style="background-color:silver;color:black;font-size:75%;">Serie</th>
+                <th style="background-color:silver;color:black;font-size:75%;">Folio</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:75%;">Importe</th>
+                <th style="background-color:silver;color:black;font-size:75%;">Descuento</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:75%;">Subtotal</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:75%;">Pago pendiente</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:75%;">Anticipo</th>
+              </tr>
+
+              <tr height="70">
+                <th></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="5">Notas de crédito</th>
+              </tr>
+
+              <tr height="15">
+                <th colspan="3" style="background-color:silver;color:black;font-size:85%;">Serie</th>
+                <th colspan="3" style="background-color:silver;color:black;font-size:85%;">Folio</th>
+                <th colspan="5" style="background-color:silver;color:black;font-size:85%; text-align:center">Total</th>
+              </tr>
+
+              <tr height="15" t-foreach="listado_notas_credito" t-as="ln">
+                <td colspan="3"><span t-esc="ln['serie_credito']"/></td>
+                <td colspan="3"><span t-esc="ln['folio_credito']"/></td>
+                <td colspan="5" align="right"><span t-esc="ln['total']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+              </tr>
+
+              <tr height="70">
+                <th colspan="3"></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="4">Total de facturas</th>
+              </tr>
+
+              <tr height="15">
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%;">Concepto</th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align: right">Serie</th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align: right">Folios</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:right">Ventas al 0% <![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:right">Ventas con IVA <![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align:right">IVA <![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:right">Total <![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+              </tr>
+
+              <tr height="15">
+                <td colspan="2" >Facturas expedidas</td>
+                <td ></td>
+                <td ></td>
+                <td colspan="2" t-foreach="listado_totales" t-as="lt" align="right"><span t-esc="lt['suma_columna_ventas_expedidas']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="2" t-foreach="listado_totales" t-as="lt" align="right"><span t-esc="lt['suma_columna_ventas_iva_expedidas']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td t-foreach="listado_totales" t-as="lt" align="right"><span t-esc="lt['suma_columna_iva_expedidas']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="2" t-foreach="listado_totales" t-as="lt" align="right"><span t-esc="lt['suma_columna_total_expedido']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+              </tr>
+
+              <tr height="35">
+                <td colspan="2" style="font-size:75%;">Facturas global del dia <![CDATA[&nbsp;]]> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></td>
+                <td ></td>
+                <td ></td>
+                <td colspan="2" t-foreach="listado_facturas_globales" t-as="lg" align="right"><span t-esc="lg['producto_sin_iva']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="2" t-foreach="listado_facturas_globales" t-as="lg" align="right"><span t-esc="lg['producto_iva']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td t-foreach="listado_facturas_globales" t-as="lg" align="right"><span t-esc="lg['iva_factura_global']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="2" t-foreach="listado_facturas_globales" t-as="lg" align="right"><span t-esc="lg['total']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+              </tr>
+
+              <tr height="35">
+                <td colspan="2" ></td>
+                <td ></td>
+                <td ></td>
+                <td colspan="2"></td>
+                <td colspan="2"></td>
+                <td >Total</td>
+                <th colspan="2" t-foreach="listado_totales" t-as="lst" style="text-align:right"><span t-esc="lst['suma_columna_total_facturas_totales']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="4">Detalle de facturas expedidas</th>
+              </tr>
+
+              <tr height="15">
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%;">Serie</th>
+                <th style="background-color:silver;color:black;font-size:85%;">Folios</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:right">Ventas al 0%</th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align:right">Ventas con IVA</th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align:right">IVA</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:right">Total</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:right">Estado</th>
+              </tr>
+
+              <tr height="35" t-foreach="listado_facturas_expedidas" t-as="lfex">
+                <td colspan="2"><span t-esc="lfex['serie_expedido']"/></td>
+                <td ><span t-esc="lfex['folio_expedido']"/></td>
+                <td colspan="2" align="right"><span t-esc="lfex['producto_sin_iva1']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td align="right"><span t-esc="lfex['producto_iva1']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td align="right" ><span t-esc="lfex['iva_factura_expedida']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td colspan="2" align="right"><spant t-esc="lfex['total_factura_expedida']" t-options = '{"widget": "float", "precision": 2}'/></td>
+                <td colspan="2"></td>
+              </tr>
+
+              <tr height="35">
+                <td colspan="2"></td>
+                <td ></td>
+                <td colspan="3"></td>
+                <td align="right">Total</td>
+                <th colspan="2" t-foreach="listado_totales" t-as="lt" style="text-align:right"><span t-esc="lt['suma_columna_total_expedido']"/></th>
+                <td colspan="3"></td>
+              </tr>
+
+              <tr height="35">
+                <th colspan="4">Movimiento de caja</th>
+              </tr>
+
+
+              <tr height="15">
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%;">Concepto</th>
+                <th colspan="1" style="background-color:silver;color:black;font-size:85%; text-align:center">Cantidad</th>
+                <th colspan="1" style="background-color:silver;color:black;font-size:85%; text-align:center">Total</th>
+              </tr>
+
+              <tr height="15" t-foreach="metodos_pago" t-as="mp">
+                <td colspan="2" ><span t-esc="metodos_pago[mp]['tipo']"/></td>
+                <td colspan="1" align="center"><span t-esc="metodos_pago[mp]['conteo']"/></td>
+                <td colspan="1" align="right"><span t-esc="metodos_pago[mp]['importe']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+              </tr>
+
+              <tr height="25">
+                <td colspan="2" ></td>
+                <th style="text-align: center">Total</th>
+                <th t-foreach="listado_totales" t-as="lt" style="text-align:right"><span t-esc="lt['total_pago']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th ></th>
+                <th colspan="2 ">Diferencia:</th>
+                <th style="text-align: center"> 000000 </th>
+              </tr>
+
+              <tr height="35">
+                <td colspan="2" ></td>
+                <th ></th>
+                <th ></th>
+                <th ></th>
+                <th colspan="2" >(Retiros-Efectivo)</th>
+                <th ></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="4">Detalles de retiro de efectivo</th>
+              </tr>
+
+              <tr height="15">
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%;">N° de retiro </th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align:center">Destintivo</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:center">Fecha y Hora</th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align:center">Cantidad</th>
+              </tr>
+
+              <tr height="20" t-foreach="listado_retiros" t-as="lr">
+                <td colspan="2" ><span t-esc="lr['n_retiro']"/></td>
+                <td colspan="1" align="center"><span t-esc="lr['distintivo']"/></td>
+                <td colspan="2" align="center"><span t-esc="lr['fecha_hora']"/></td>
+                <td colspan="1" align="right"><span t-esc="lr['cantidad']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+              </tr>
+
+              <tr height="10">
+                <td colspan="2" ></td>
+              </tr>
+
+              <tr height="35">
+                <td colspan="2" ></td>
+                <td colspan="1" align="center"></td>
+                <th colspan="2" style="text-align:center">Total sin retiro inicial:</th>
+                <th colspan="1" style="text-align:right" t-foreach="listado_totales" t-as="lt"><span t-esc="lt['total_retiros']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="4">Relación de Tickets Cancelados</th>
+              </tr>
+
+              <tr height="15">
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%;">Serie</th>
+                <th colspan="1" style="background-color:silver;color:black;font-size:85%; text-align:center">Folio</th>
+                <th colspan="1" style="background-color:silver;color:black;font-size:85%; text-align:center">Importe</th>
+                <th colspan="1" style="background-color:silver;color:black;font-size:85%; text-align:center">Autorizado</th>
+              </tr>
+
+              <tr height="15" t-foreach="listado_cancelados" t-as="lc">
+                <td colspan="2" ><span t-esc="lc['serie']"/></td>
+                <td colspan="1" align="right"><span t-esc="lc['folio1']"/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="1" align="right"><span t-esc="lc['importe']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></td>
+                <td colspan="1" ></td>
+              </tr>
+
+              <tr height="15" t-foreach="listado_totales" t-as="lt">
+                <td colspan="2" ></td>
+                <td colspan="1" align="center">Total</td>
+                <th colspan="1" style="text-align:right"><span t-esc="lt['total_cancelado']" t-options = '{"widget": "float", "precision": 2}'/><![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <td colspan="1" ></td>
+              </tr>
+
+              <tr height="25">
+                <th colspan="4"></th>
+              </tr>
+
+              <tr height="35">
+                <th colspan="4">Retiros corte previo</th>
+              </tr>
+
+              <tr height="15" >
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%;">No. previsualización</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:center">Cantidad billetes</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:center">Cantidad morralla</th>
+                <th style="background-color:silver;color:black;font-size:85%; text-align:right">Diferencia<![CDATA[&nbsp;&nbsp;&nbsp;]]></th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:center">Fecha y hora</th>
+                <th colspan="2" style="background-color:silver;color:black;font-size:85%; text-align:center">Usuario</th>
+              </tr>
+
+              <tr height="35">
+                <td colspan="2" ></td>
+
+              </tr>
+
+
+              <tr height="15" >
+                <td ></td>
+                <td align="right"></td>
+                <td align="right"></td>
+                <td colspan="3" align="center">____________________________</td>
+                <td align="left"></td>
+                <td colspan="2" ></td>
+                <td ></td>
+              </tr>
+
+              <tr height="15">
+                <td></td>
+                <td ></td>
+                <td ></td>
+                <td colspan="3" align="center"><span t-field="o.user_id"/></td>
+                <td ></td>
+                <td colspan="2" ></td>
+                <td ></td>
+              </tr>
+
+            </tbody>
+          </table>
+
+
+        </t>
+      </div>
+    </t>
+  </template>
+</odoo>
