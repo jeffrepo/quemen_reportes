@@ -175,6 +175,7 @@ class ReporteSesion(models.AbstractModel):
         suma_precio_sin_descuento = 0
         suma_precios_descuento = 0
         total_importe_credito = 0
+        importe_descuento = 0
         for fac_rec in facturas_rectificativa:
             listado_notas_credito.append({'folio_credito': fac_rec.invoice_origin, 'total': fac_rec.amount_total})
             nota_credito += fac_rec.amount_total

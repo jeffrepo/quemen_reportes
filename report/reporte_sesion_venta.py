@@ -177,7 +177,7 @@ class ReporteSesion(models.AbstractModel):
         lineas_descuento = 0
         subtotal_credito = 0
         precio_sin_descuento = 0
-
+        importe_descuento = 0
         suma_precio_sin_descuento = 0
         suma_impuesto = 0
         for fac_rec in facturas_rectificativa:
