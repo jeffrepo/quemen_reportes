@@ -131,14 +131,10 @@ class FamiliaWizard(models.TransientModel):
             for tienda in w.tienda_ids:
                 pedidos = self.env['pos.order'].search([('session_id.config_id','=',tienda.id),('date_order','>=',str(fecha_inicio_hora)),('date_order','<=',str(fecha_final_hora))])
                 for pedido in pedidos:
-                    logging.warn("Referencia de pedido: " + pedido.name)
                     for lineas_pedido in pedido.lines:
                         venta_producto=0
                         if lineas_pedido.product_id.categ_id.id in diccionario_degustacion_devolucion and lineas_pedido.product_id.id in diccionario_degustacion_devolucion[lineas_pedido.product_id.categ_id.id]['productos_hijos']:
                             venta_producto += lineas_pedido.price_subtotal_incl
-                            logging.warn("Producto: " +lineas_pedido.product_id.name + " subtotal: " + str(lineas_pedido.price_subtotal_incl))
-                            logging.warn("")
-                            logging.warn("")
                             diccionario_degustacion_devolucion[lineas_pedido.product_id.categ_id.id]['productos_hijos'][lineas_pedido.product_id.id]['total_producto_venta'] = round(venta_producto,2)
 
 
@@ -171,9 +167,6 @@ class FamiliaWizard(models.TransientModel):
                 diferencia_devolucion_ideal = round((diccionario_degustacion_devolucion[pkey]['devolucion']-diccionario_degustacion_devolucion[pkey]['imp_dev_ideal']),2)
                 diccionario_degustacion_devolucion[pkey]['dif_dev_ideal']=round(diferencia_devolucion_ideal,2)
 
-
-            logging.warn("diccionario_degustacion_devolucion")
-            logging.warn(diccionario_degustacion_devolucion)
 
             borde = libro.add_format({'border': 2, 'border_color':'#2caad1', 'fg_color': '#067ca1', 'color':'#ffffff','align': 'center'})
             negrita = libro.add_format({'bold': 1, 'fg_color': '#d5d9de'})
