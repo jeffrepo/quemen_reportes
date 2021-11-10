@@ -19,10 +19,6 @@ class ReporteProduccion(models.AbstractModel):
                     listado_productos[lineas.product_id.id]={'nombre':lineas.product_id.name, 'id': lineas.product_id.id ,'cantidad':0, 'unidad_medida' : lineas.product_uom.name}
                 listado_productos[lineas.product_id.id]['cantidad'] += lineas.product_uom_qty
 
-        logging.warn("listado_productos")
-        logging.warn(listado_productos)
-        logging.warn(listado_productos.values())
-        logging.warn(lista_ordenes_produccion)
         return {'lista_ordenes_produccion': lista_ordenes_produccion, 'listado_productos': listado_productos}
 
 

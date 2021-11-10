@@ -172,7 +172,12 @@ class FamiliaWizard(models.TransientModel):
             negrita = libro.add_format({'bold': 1, 'fg_color': '#d5d9de'})
             derecha = libro.add_format({'align': 'right'})
             fon_cat_hijas = libro.add_format({'fg_color': '#b8d7ff'})
-            hoja.write(2,1, 'Devolución y degustación por familia acumulado', negrita)
+            dia_inicio = w.fecha_inicio.strftime('%d')
+            dia_final = w.fecha_final.strftime('%d')
+            mes_final = w.fecha_final.strftime('%m')
+            año_final = w.fecha_final.strftime('%Y')
+
+            hoja.write(2,1, 'Devolución y degustación por familia acumulado ' +str(dia_inicio)+' al '+str(dia_final)+' del '+str(mes_final) +' /'+str(año_final), negrita)
             hoja.write(3,1, 'FAMILIA ', borde)
             hoja.write(3,2, 'DEGUS ', borde)
             hoja.write(3,3, 'DEVO ', borde)
