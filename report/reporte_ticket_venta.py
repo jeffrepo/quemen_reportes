@@ -49,6 +49,7 @@ class ReporteSesion(models.AbstractModel):
         ventas = docs.order_ids
         facturas = ventas.account_move
         numero_recibo = []
+        importe_descuento = 0
 
 
         for referencia in ventas:

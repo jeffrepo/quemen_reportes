@@ -9,6 +9,7 @@
           <field name="crm_team_id" position="after">
             <group>
               <field name="salida_degustacion_id"/>
+              <field name="devolucion_producto_id"/>
             </group>
           </field>
         </field>

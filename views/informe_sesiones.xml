@@ -5,7 +5,7 @@
     <t t-call='web.basic_layout'>
       <div class ="page">
         <H4 align="center"><strong>MAQUILADORA PASTELERA S.A. DE C.V.</strong></H4>
-        <H6 align="center">CORTE DE CAJA</H6>
+        <H6 align="center">REPORTE DE CORTE DE CAJA</H6>
         <br></br>
         <t t-set="retorno_productos_sesiones" t-value="sesiones(docs)"/>
         <t t-set="listado_totales" t-value="retorno_productos_sesiones['listado_totales']"/>

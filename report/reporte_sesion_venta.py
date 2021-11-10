@@ -49,6 +49,9 @@ class ReporteSesion(models.AbstractModel):
         ventas = docs.order_ids
         facturas = ventas.account_move
         numero_recibo = []
+        importe_descuento =0;
+        suma_precios_descuento =0;
+        precio_descuento = 0;
 
 
         for referencia in ventas:
@@ -164,6 +167,7 @@ class ReporteSesion(models.AbstractModel):
         for referencia1 in facturas:
             listado_referencia_facturas.append(referencia1.ref)
 
+            suma_precios_descuento += precio_descuento
         facturas_rectificativa = self.env['account.move'].search([('type' , '=', 'out_refund'), ('invoice_origin', 'in', listado_referencia_facturas)])
         listado_notas_credito = []
         nota_credito = 0
@@ -196,21 +200,24 @@ class ReporteSesion(models.AbstractModel):
                     calculo_descuento = precio_descuento * (lineas_credito.discount / 100)
                     logging.warn("calculo_descuento")
                     logging.warn(calculo_descuento)
-                    suma_precios_descuento += precio_descuento
 
                 else:
                     precio_sin_descuento = lineas_credito.quantity * lineas_credito.price_unit
                     suma_precio_sin_descuento += precio_sin_descuento
 
             descuento_credito += calculo_descuento
-            importe_descuento = (suma_precios_descuento + suma_precio_sin_descuento) + suma_impuesto
+            importe_descuento = (suma_precios_descuento + suma_precio_sin_descuento) + suma_impuesto;
+            logging.warn("importe_descuento")
+            logging.warn(importe_descuento)
 
         logging.warn("descuento_credito")
         logging.warn(descuento_credito)
-        logging.warn("importe_descuento")
-        logging.warn(importe_descuento)
         total_nota_credito = round(nota_credito, 2)
-        total_importe_credito = importe_descuento
+        if importe_descuento != None:
+            logging.warn("importe_descuento")
+            logging.warn(importe_descuento)
+            total_importe_credito = importe_descuento
+
         total_descuento_credito = descuento_credito
         total_desglose_venta = round(total_ventas_mostrador - total_nota_credito, 2)
 

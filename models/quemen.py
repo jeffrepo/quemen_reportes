@@ -9,7 +9,8 @@ class QuemenMetas(models.Model):
 
     linea_ids = fields.One2many('quemen.metas.linea', 'meta_id', 'linea')
     tienda_almacen_id = fields.Many2one('pos.config', 'Tienda')
-    fecha = fields.Date('Fecha')
+    fecha_inicio = fields.Date('Fecha inicio')
+    fecha_final = fields.Date('Fecha Final')
 
 class QuemenMetasLinea(models.Model):
     _name = "quemen.metas.linea"
@@ -18,3 +19,4 @@ class QuemenMetasLinea(models.Model):
     meta_id = fields.Many2one('quemen.metas', 'Meta')
     categoria_id = fields.Many2one('product.category', 'Categoria')
     metaTotal = fields.Float('metas')
+    meta_devuelto = fields.Float('% ideal de devoluciones')

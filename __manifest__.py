@@ -14,6 +14,7 @@ Tienda de pasteles...
     'depends': ['base','point_of_sale', 'purchase', 'sale', 'stock', 'pos_sale'],
     'data': [
         'views/quemen_view.xml',
+        'security/ir.model.access.csv',
         'views/salida_productos_tienda_wizard_view.xml',
         'views/quemen_ventas_anual_wizard_view.xml',
         'views/pos_config_views.xml',
@@ -23,7 +24,8 @@ Tienda de pasteles...
         'data/paperformat_ticket.xml',
         'views/informe_sesiones.xml',
         'views/reporte_ticket.xml',
-        'views/informe_ticket.xml'
+        'views/informe_ticket.xml',
+        'views/devolucion_familia_wizard_view.xml',
 
 
     ],

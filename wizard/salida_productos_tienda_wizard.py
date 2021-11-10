@@ -30,7 +30,7 @@ class PruebaWizard(models.TransientModel):
 
 
     def generar_excel(self):
-
+        # Reporte Salidas
         for w in self:
             f = io.BytesIO()
             libro = xlsxwriter.Workbook(f)

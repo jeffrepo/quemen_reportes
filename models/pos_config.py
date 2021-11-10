@@ -12,5 +12,5 @@ from odoo.exceptions import ValidationError, UserError
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    salida_degustacion_id = fields.Many2one('stock.picking.type', 'salida')
-    
+    salida_degustacion_id = fields.Many2one('stock.picking.type', 'Salida degustación')
+    devolucion_producto_id = fields.Many2one('stock.picking.type', 'Devoluciones')

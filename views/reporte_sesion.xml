@@ -4,7 +4,7 @@
 
     <report
       id = "reporte_sesion"
-      string = "Reporte de sesión"
+      string = "Reporte de corte de caja"
       model = "pos.session"
       report_type = "qweb-pdf"
       file= "quemen_reportes.reporte_sesion_ventas_informes"
