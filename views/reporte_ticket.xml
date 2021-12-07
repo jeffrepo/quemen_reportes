@@ -4,7 +4,7 @@
 
     <report
       id="reporte_ticket"
-      string="Reporte de ticket"
+      string="Corte de caja Pdv"
       model="pos.session"
       report_type="qweb-pdf"
       file="quemen_reportes.reporte_ticket_ventas_informes"
