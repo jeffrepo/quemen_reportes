@@ -161,8 +161,8 @@ class FamiliaWizard(models.TransientModel):
                 porcentaje_devol = round(( diccionario_degustacion_devolucion[pkey]['devolucion'] / tot_devo )*100,2)
                 calculo = round((diccionario_degustacion_devolucion[pkey]['devolucion']/total_columna_devo),2)
                 calculo_ideal = round((diccionario_degustacion_devolucion[pkey]['importe_pedido'] * 0.02),2)
-                diccionario_degustacion_devolucion[pkey]['porcentaje_devo'] = calculo
-                diccionario_degustacion_devolucion[pkey]['porcentaje_part_familia'] = porcentaje_devol;
+                diccionario_degustacion_devolucion[pkey]['porcentaje_devo'] =porcentaje_devol
+                diccionario_degustacion_devolucion[pkey]['porcentaje_part_familia'] = calculo
                 diccionario_degustacion_devolucion[pkey]['imp_dev_ideal'] = round(calculo_ideal,2)
                 diferencia_devolucion_ideal = round((diccionario_degustacion_devolucion[pkey]['devolucion']-diccionario_degustacion_devolucion[pkey]['imp_dev_ideal']),2)
                 diccionario_degustacion_devolucion[pkey]['dif_dev_ideal']=round(diferencia_devolucion_ideal,2)

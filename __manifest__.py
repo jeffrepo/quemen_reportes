@@ -26,8 +26,11 @@ Tienda de pasteles...
         'views/reporte_ticket.xml',
         'views/informe_ticket.xml',
         'views/devolucion_familia_wizard_view.xml',
-
-
+        'views/tablero_metas_wizard_view.xml',
+        'views/reporte_descuento_wizard_view.xml',
+        'views/reporte_ventas_wizard_view.xml',
+        'views/reporte_ventas_piezas_wizard_view.xml',
+        'views/reporte_metas_wizard_view.xml',
     ],
     'demo':[
 

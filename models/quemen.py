@@ -19,4 +19,3 @@ class QuemenMetasLinea(models.Model):
     meta_id = fields.Many2one('quemen.metas', 'Meta')
     categoria_id = fields.Many2one('product.category', 'Categoria')
     metaTotal = fields.Float('metas')
-    meta_devuelto = fields.Float('% ideal de devoluciones')

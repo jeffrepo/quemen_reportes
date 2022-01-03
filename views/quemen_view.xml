@@ -16,7 +16,6 @@
                         <tree editable="bottom">
                           <field name="categoria_id"/>
                           <field name="metaTotal"/>
-                          <field name="meta_devuelto"/>
                           <!-- <field name="work_order_ids" string="Work Orders" widget="many2many_tags" /> -->
                         </tree>
                       </field>
