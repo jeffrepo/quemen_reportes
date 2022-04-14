@@ -170,7 +170,7 @@ class ReporteSesion(models.AbstractModel):
         for referencia1 in facturas:
             listado_referencia_facturas.append(referencia1.ref)
 
-        facturas_rectificativa = self.env['account.move'].search([('type' , '=', 'out_refund'), ('invoice_origin', 'in', listado_referencia_facturas)])
+        facturas_rectificativa = self.env['account.move'].search([('move_type' , '=', 'out_refund'), ('invoice_origin', 'in', listado_referencia_facturas)])
         listado_notas_credito = []
         nota_credito = 0
         total_descuento_credito = 0
@@ -185,11 +185,11 @@ class ReporteSesion(models.AbstractModel):
         for fac_rec in facturas_rectificativa:
             listado_notas_credito.append({'folio_credito': fac_rec.invoice_origin, 'total': fac_rec.amount_total})
             nota_credito += fac_rec.amount_total
-            for impuesto in fac_rec.amount_by_group:
-                suma_impuesto += impuesto[1]
-
+            
+            calculo_descuento = 0
             for lineas_credito in fac_rec.invoice_line_ids:
                 lineas_descuento = lineas_credito.discount
+                suma_impuesto += (lineas_credito.price_total - lineas_credito.price_subtotal)
                 if lineas_descuento != False:
                     precio_descuento = lineas_credito.quantity * lineas_credito.price_unit
                     calculo_descuento = precio_descuento * (lineas_credito.discount / 100)
