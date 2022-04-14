@@ -118,7 +118,7 @@ class ReporteSesion(models.AbstractModel):
 
                 inicial = lineas_pagos.payment_method_id.name.split(' ', 0)[0]
                 # inicial1 = inicial[0]
-                inicial1 = lineas_pagos.payment_method_id.cash_journal_id.code
+                inicial1 = lineas_pagos.payment_method_id.journal_id.code
 
                 if lineas_pagos.payment_method_id.id not in metodos_pago:
                     metodos_pago[lineas_pagos.payment_method_id.id]={'tipo': lineas_pagos.payment_method_id.name, 'importe': 0, 'id': lineas_pagos.payment_method_id.id, 'conteo': 0}
@@ -146,16 +146,21 @@ class ReporteSesion(models.AbstractModel):
             total_pagos += metodos_pago[metod_pago]['importe']
 
 
-        logging.warn(metodos_pago)
+        logging.warning(metodos_pago)
 
-        retiros = docs.retiros_ids
+        # retiros = docs.retiros_ids
+        logging.warning('Que onda????????')
+        logging.warning(docs.name)
         listado_retiros = []
+        retiros = self.env['account.bank.statement'].search([('pos_session_id', '=', docs.id)])
+        logging.warning(retiros)
         distint = 0
-        for lineas in retiros:
+        for retiro in retiros:
             distint += 1
-            listado_retiros.append({'n_retiro': lineas.name, 'distintivo': distint, 'fecha_hora': lineas.fecha_hora, 'cantidad': lineas.total })
+            for lineas in retiro.line_ids:
+                listado_retiros.append({'n_retiro': lineas.payment_ref, 'distintivo': distint, 'fecha_hora': lineas.date, 'cantidad': lineas.amount })
 
-        logging.warn(listado_retiros)
+        logging.warning(listado_retiros)
         total_retiros = 0
         for list_ret in listado_retiros:
             total_retiros += list_ret['cantidad']
@@ -188,8 +193,8 @@ class ReporteSesion(models.AbstractModel):
                 if lineas_descuento != False:
                     precio_descuento = lineas_credito.quantity * lineas_credito.price_unit
                     calculo_descuento = precio_descuento * (lineas_credito.discount / 100)
-                    logging.warn("calculo_descuento")
-                    logging.warn(calculo_descuento)
+                    logging.warning("calculo_descuento")
+                    logging.warning(calculo_descuento)
                     suma_precios_descuento += precio_descuento
 
                 else:
@@ -206,8 +211,8 @@ class ReporteSesion(models.AbstractModel):
 
         facturas_globales = self.env['account.move'].search([('pos_order_ids', 'in', pedidos_no_facturados)])
         factura_expedida = self.env['account.move'].search([('pos_order_ids', 'in', pedidos_facturados)])
-        logging.warn("factura_expedida")
-        logging.warn(factura_expedida)
+        logging.warning("factura_expedida")
+        logging.warning(factura_expedida)
 
         listado_facturas_expedidas=[]
         total_factura_expedida = 0
@@ -270,17 +275,17 @@ class ReporteSesion(models.AbstractModel):
         'iva_factura_global': iva_factura_global,
         'total': total_factura_global})
 
-        logging.warn(listado_notas_credito)
-        logging.warn(listado_productos)
-        logging.warn(listado_totales)
+        logging.warning(listado_notas_credito)
+        logging.warning(listado_productos)
+        logging.warning(listado_totales)
 
         suma_columna_total_facturas_totales = 0
         suma_columna_total_facturas_totales = suma_columna_total_expedido + total_factura_global
 
         listado_pedidos = self.env['pos.order'].search([('pos_reference', 'in', numero_recibo), ('amount_total', '>=', 0 )])
 
-        logging.warn("listado_pedidos")
-        logging.warn(listado_pedidos)
+        logging.warning("listado_pedidos")
+        logging.warning(listado_pedidos)
 
         listado_cancelados = []
         folios1= []
@@ -336,12 +341,12 @@ class ReporteSesion(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        self.model = 'pos.session'
-        docs = self.env[self.model].browse(docids)
+        # self.model = 'pos.session'
+        docs = self.env['pos.session'].browse(docids)
 
         return {
             'doc_ids': docids,
-            'doc_model': self.model,
+            'doc_model': 'pos.session',
             'docs': docs,
             'sesiones': self.sesiones
         }
