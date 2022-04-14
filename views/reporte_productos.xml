@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="reporte_produccion_productos">
+    <t t-call='web.basic_layout'>
+      <div class ="page">
+        <t t-set="retorno_productos_diccionario" t-value="retorno_productos(docs)"/>
+        <t t-set="lista_ordenes_produccion" t-value="retorno_productos_diccionario['lista_ordenes_produccion']"/>
+        <t t-set="listado_productos" t-value="retorno_productos_diccionario['listado_productos']"/>
+        <H1 align="center"><strong>RESUMEN DE PRODUCCION</strong></H1>
+        <br></br>
+        <br></br>
+        <br></br>
+        <table style="width:100%">
+          <tbody>
+            <tr height="60">
+              <th><br>Ordenes de producción </br></th>
+            </tr>
+            <tr t-foreach="lista_ordenes_produccion" t-as="ordenes">
+              <td><span t-field="ordenes.name"/></td>
+            </tr>
+
+            <tr>
+              <th><hr size="8px" color="black"></hr></th>
+              <th><hr size="8px" color="black"></hr></th>
+              <th><hr size="8px" color="black"></hr></th>
+            </tr>
+
+            <tr>
+              <th>Agrupación por productos</th>
+            </tr>
+
+            <tr height="60">
+              <td> <br>Producto </br></td>
+              <td> <br>Cantidad </br></td>
+              <td> <br>Unidad de medida</br></td>
+            </tr>
+
+
+            <tr t-foreach="listado_productos" t-as="p">
+
+              <td><span t-esc="listado_productos[p]['nombre']"/></td>
+              <td><span t-esc="listado_productos[p]['cantidad']"/></td>
+              <td><span t-esc="listado_productos[p]['unidad_medida']"/></td>
+
+            </tr>
+
+            <tr>
+              <th><hr size="8px" color="black"></hr></th>
+              <th><hr size="8px" color="black"></hr></th>
+              <th><hr size="8px" color="black"></hr></th>
+            </tr>
+
+          </tbody>
+        </table>
+        <!-- <span t-esc="retorno_productos(docs)"/> -->
+      </div>
+    </t>
+  </template>
+</odoo>

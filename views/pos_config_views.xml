@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="quemen_pos_config_view_form_pos_sale" model="ir.ui.view">
+        <field name="name">quemen.pos.config.form.pos.sale</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="pos_sale.pos_config_view_form_pos_sale"/>
+        <field name="arch" type="xml">
+          <field name="crm_team_id" position="after">
+            <group>
+              <field name="salida_degustacion_id"/>
+              <field name="devolucion_producto_id"/>
+            </group>
+          </field>
+        </field>
+    </record>
+</odoo>
