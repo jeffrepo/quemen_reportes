@@ -13,6 +13,8 @@ Tienda de pasteles...
     'website': '',
     'depends': ['base','point_of_sale', 'purchase', 'sale', 'stock', 'pos_sale'],
     'data': [
+    	'views/report.xml',
+    	'report/prodcuto_terminado.xml',
         # 'views/quemen_view.xml',
         'security/ir.model.access.csv',
         # 'views/salida_productos_tienda_wizard_view.xml',
