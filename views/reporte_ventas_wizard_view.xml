@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+  <record id="view_form_quemen_reporte_ventas_wizard" model="ir.ui.view">
+      <field name="name">view.form.quemen_reportes.reporte_ventas_wizard</field>
+      <field name="model">quemen_reportes.reporte_ventas.wizard</field>
+      <field name="arch" type="xml">
+          <form string="Reporte Ventas">
+            <group>
+              <field name="fecha_inicio"/>
+              <field name="fecha_final"/>
+              <field name="tienda_ids"/>
+              <field name="estado"/>
+            </group>
+            <group>
+              <field name="name" invisible="1"/>
+              <field name="archivo" readonly="1" filename="name"/>
+              <!-- voy a generar un archivo con 1, solo lectura
+              readonly igual a 0 voy adjuntar un archivo -->
+
+            </group>
+            <footer>
+                       <!-- <button name="print_report" string="Generar reporte"  type="object" class="btn-primary"/> -->
+                       <button name="generando_excel" string="Reporte excel" type="object" class="oe_highlight"/>
+                       <!-- name nombre de la funcion, string nombre del boton,  -->
+                       <button string="Cancel" class="btn-default" special="cancel" />
+                   </footer>
+          </form>
+      </field>
+    </record>
+
+    <act_window id="action_reporte_ventas"
+      name="Generar informe reporte de ventas"
+      res_model="quemen_reportes.reporte_ventas.wizard"
+      binding_model="quemen_reportes.reporte_ventas.wizard"
+      view_mode="form"
+      target="new"
+      />
+    <!-- hola   -->
+    <menuitem
+      action="action_reporte_ventas"
+      id="quemen_reporte_ventas"
+      name="Reporte ventas"
+      parent="point_of_sale.menu_point_rep"
+      sequence="60"
+      />
+
+  </data>
+</odoo>

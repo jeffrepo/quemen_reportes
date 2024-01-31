@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <report
+      id = "reporte_sesion"
+      string = "Corte de caja admin"
+      model = "pos.session"
+      report_type = "qweb-pdf"
+      file= "quemen_reportes.reporte_sesion_ventas_informes"
+      name= "quemen_reportes.reporte_sesion_ventas_informes"
+      />
+
+  </data>
+
+</odoo>
