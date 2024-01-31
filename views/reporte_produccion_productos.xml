@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="reporte_produccion_productos_document">
+    <t t-call="web.html_container">
+        <t t-call="web.basic_layout">
+            <t t-set="data_report_margin_top" t-value="6"/>
+            <t t-set="data_report_header_spacing" t-value="3"/>
+            <t t-set="data_report_dpi" t-value="110"/>
+            
+            <div class="header">
+                <img src="/web/binary/company_logo"/>
+            </div>          
+            <div class="page">
+                <t t-set="retorno_productos_diccionario" t-value="retorno_productos(docs)"/>
+                <t t-set="lista_ordenes_produccion" t-value="retorno_productos_diccionario['lista_ordenes_produccion']"/>
+                <t t-set="listado_productos_componentes" t-value="retorno_productos_diccionario['listado_productos_componentes']"/>
+                <t t-set="listado_productos_mp" t-value="retorno_productos_diccionario['listado_productos_mp']"/>
+                <h1 align="center"><strong>VALE</strong></h1>
+                <br/>
+                <table style="width:100%">
+                     
+                            <tr>
+                              <th>Vale</th>
+                            </tr>
+                            <tr>
+                              <th>Fecha: <span t-esc="fecha_hoy()" t-options='{"widget": "date"}'/>/></th>
+                            </tr>
+                            <tr>
+                                <td>Orden de producción</td>
+                                <td>Origen</td>
+                                <td>Poroducto</td>
+                                <td>Cantidad</td>
+                            </tr>    
+                         <tbody>
+                            <tr t-foreach="lista_ordenes_produccion" t-as="ordenes">
+                              <td><span t-field="ordenes.name"/></td>
+                              <td><span t-field="ordenes.origin"/></td>
+                              <td><span t-field="ordenes.product_id.name"/> </td>
+                              <td><span t-field="ordenes.product_qty" t-options='{"widget": "float", "precision": 5}'/> </td>
+                            </tr>
+                
+                            <tr>
+                              <th><hr size="8px" color="black"/></th>
+                              <th><hr size="8px" color="black"/></th>
+                              <th><hr size="8px" color="black"/></th>
+                              <th><hr size="8px" color="black"/></th>
+                            </tr>
+                      </tbody>
+                </table>
+                <table style="width:100%">  
+                
+                    <tr>
+                      <th>Agrupación por productos</th>
+                    </tr>
+                
+                    <tr height="60">
+                      <td> <br>Producto </br></td>
+                      <td> <br>Cantidad </br></td>
+                      <td> <br>Unidad de medida</br></td>
+                    </tr>
+                
+                    <tbody>
+                        <tr t-foreach="listado_productos_componentes" t-as="p">
+                
+                          <td><span t-esc="listado_productos_componentes[p]['nombre']"/></td>
+                          <td><span t-esc="listado_productos_componentes[p]['cantidad']" t-options='{"widget": "float", "precision": 5}'/></td>
+                          <td><span t-esc="listado_productos_componentes[p]['unidad_medida']"/></td>
+                
+                        </tr>
+                        <tr t-foreach="listado_productos_mp" t-as="p">
+                
+                          <td><span t-esc="listado_productos_mp[p]['nombre']"/></td>
+                          <td><span t-esc="listado_productos_mp[p]['cantidad']" t-options='{"widget": "float", "precision": 5}'/></td>
+                          <td><span t-esc="listado_productos_mp[p]['unidad_medida']"/></td>
+                
+                        </tr>        
+                        <tr>
+                          <th><hr size="8px" color="black"/></th>
+                          <th><hr size="8px" color="black"/></th>
+                          <th><hr size="8px" color="black"/></th>
+                        </tr>
+                
+                      </tbody>
+                </table>
+            <!-- <span t-esc="retorno_productos(docs)"/> -->
+            </div>
+        </t>   
+    </t>
+  </template>
+    
+    <template id="reporte_produccion_productos">
+        <t t-call="web.html_container">
+            <!-- <t t-set="data_report_margin_top" t-value="12"/>
+            <t t-set="data_report_header_spacing" t-value="9"/> -->
+
+            <t t-call="quemen_reportes.reporte_produccion_productos_document" t-lang="docs[0].user_id.lang"/>
+
+        </t>
+    </template>    
+</odoo>

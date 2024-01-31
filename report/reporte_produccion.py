@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import api, models, fields
 import logging
 
 class ReporteProduccion(models.AbstractModel):
@@ -7,33 +7,40 @@ class ReporteProduccion(models.AbstractModel):
     nombre_reporte=''
 
     def retorno_productos(self, docs):
-        listado_productos={}
+        listado_productos_componentes={}
+        listado_productos_mp = {}
         cantidad = 0
         lista_ordenes_produccion = []
-
         for i in docs:
             productos_general = i.move_raw_ids
             lista_ordenes_produccion+=i
             for lineas in productos_general:
-                if lineas.product_id.id not in listado_productos:
-                    listado_productos[lineas.product_id.id]={'nombre':lineas.product_id.name, 'id': lineas.product_id.id ,'cantidad':0, 'unidad_medida' : lineas.product_uom.name}
-                listado_productos[lineas.product_id.id]['cantidad'] += lineas.product_uom_qty
+                if lineas.product_id.name[0:4] == "COMP":
+                    if lineas.product_id.id not in listado_productos_componentes:
+                        listado_productos_componentes[lineas.product_id.id]={'nombre':lineas.product_id.name, 'id': lineas.product_id.id ,'cantidad':0, 'unidad_medida' : lineas.product_uom.name}
+                    listado_productos_componentes[lineas.product_id.id]['cantidad'] += lineas.product_uom_qty
+                else:
+                    if lineas.product_id.id not in listado_productos_mp:
+                        listado_productos_mp[lineas.product_id.id]={'nombre':lineas.product_id.name, 'id': lineas.product_id.id ,'cantidad':0, 'unidad_medida' : lineas.product_uom.name}
+                    listado_productos_mp[lineas.product_id.id]['cantidad'] += lineas.product_uom_qty
 
-        return {'lista_ordenes_produccion': lista_ordenes_produccion, 'listado_productos': listado_productos}
+        return {'lista_ordenes_produccion': lista_ordenes_produccion, 'listado_productos_componentes': listado_productos_componentes, 'listado_productos_mp': listado_productos_mp}
 
+    def fecha_hoy(self):
+        logging.warning(fields.Datetime.now())
+        return fields.date.today()
 
-
-    @api.model
+    
     def _get_report_values(self, docids, data=None):
-        self.model = 'mrp.production'
-        docs = self.env[self.model].browse(docids)
-
+        docs = self.env['mrp.production'].browse(docids)
         return {
             'doc_ids': docids,
-            'doc_model': self.model,
+            'doc_model': "mrp.production",
             'docs': docs,
-            'retorno_productos': self.retorno_productos
+            'retorno_productos': self.retorno_productos,
+            'fecha_hoy': self.fecha_hoy,
         }
+        
 
 class ReporteProduccion1(models.AbstractModel):
     _name = 'report.quemen_reportes.reporte_produccion_productos'

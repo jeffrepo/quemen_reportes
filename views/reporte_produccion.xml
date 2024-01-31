@@ -4,13 +4,25 @@
 
     <report
       id = "reporte_produccion1"
-      string = "Reporte de produccion"
+      string = "Vale"
       model = "mrp.production"
       report_type = "qweb-pdf"
       file= "quemen_reportes.reporte_produccion_productos"
       name= "quemen_reportes.reporte_produccion_productos"
       />
 
+        <!-- <record id="reporte_produccion1" model="ir.actions.report">
+            <field name="name">Reporte de produccion</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">quemen_reportes.reporte_produccion_productos</field>
+            <field name="report_file">quemen_reportes.reporte_produccion_productos</field>
+            <field name="print_report_name"></field>
+            <field name="attachment"></field>
+            <field name="binding_model_id" ref="model_mrp_production"/>
+            <field name="binding_type">report</field>
+        </record> -->
+      
   </data>
 
 </odoo>

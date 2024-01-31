@@ -3,6 +3,6 @@
 
 # from . import salida_productos_tienda
 # from . import recibo_pasteleria
-# from . import reporte_produccion
+from . import reporte_produccion
 # from . import reporte_sesion_venta
-from . import reporte_ticket_venta
+# from . import reporte_ticket_venta

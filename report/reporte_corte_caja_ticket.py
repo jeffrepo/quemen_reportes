@@ -1,8 +1,8 @@
 from odoo import api, models
 import logging
 
-class ReporteSesion(models.AbstractModel):
-    _name = 'report.reporte_ticket_venta.reporte'
+class ReporteCorteCajaTicket(models.AbstractModel)::
+    _name = 'report.reporte_corte_caja_ticket.reporte'
 
     nombre_reporte=''
 
@@ -341,18 +341,11 @@ class ReporteSesion(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        # self.model = 'pos.session'
         docs = self.env['pos.session'].browse(docids)
-
+        logging.warning('reporte final')
         return {
             'doc_ids': docids,
             'doc_model': 'pos.session',
             'docs': docs,
             'sesiones': self.sesiones
         }
-
-class ReporteSesion1(models.AbstractModel):
-    _name = 'report.quemen_reportes.reporte_ticket_ventas_informes'
-    _inherit = 'report.reporte_ticket_venta.reporte'
-
-    nombre_reporte = 'quemen_reportes.reporte_ticket_ventas_informes'
