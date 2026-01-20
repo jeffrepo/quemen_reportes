@@ -3,6 +3,7 @@
 
 {
     'name': 'quemen reportes',
+    'author': "SISPAV",
     'version': '0.0',
     'summary': 'quemen reportes',
     'sequence':15,
@@ -10,6 +11,7 @@
 Tienda de pasteles...
     """,
     'category':'Pasteles',
+    'license': 'LGPL-3',
     'website': '',
     'depends': ['base','point_of_sale', 'purchase', 'sale', 'stock', 'pos_sale'],
     'data': [

@@ -13,6 +13,7 @@ import logging
 
 class ReportSalidaProductosTienda(models.AbstractModel):
     _name = 'report.quemen_reportes.salida_productos_tienda'
+    _description = ''
 
     @api.model
     def _get_report_values(self, docids, data=None):

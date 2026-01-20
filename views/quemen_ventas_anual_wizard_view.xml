@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <data>
-  <record id="view_form_quemen_ventas_anual_wizard" model="ir.ui.view">
+
+    <record id="view_form_quemen_ventas_anual_wizard" model="ir.ui.view">
       <field name="name">view.form.quemen_reportes.quemen_ventas_anual_wizard</field>
       <field name="model">quemen_reportes.quemen_ventas_anual.wizard</field>
       <field name="arch" type="xml">
-          <form string="Salida productos de tienda">
-            <group>
-              <field name="tienda_ids"/>
-              <field name="fecha_inicio"/>
-              <field name="fecha_final"/>
-              <field name="categoria_ids"/>
-
-            </group>
-            <group>
-              <field name="name" invisible="1"/>
-              <field name="archivo" readonly="1" filename="name"/>
-              <!-- voy a generar un archivo con 1, solo lectura
-              readonly igual a 0 voy adjuntar un archivo -->
-
-            </group>
-            <footer>
-                       <!-- <button name="print_report" string="Generar reporte"  type="object" class="btn-primary"/> -->
-                       <button name="generar_excel" string="Reporte excel" type="object" class="oe_highlight"/>
-                       <!-- name nombre de la funcion, string nombre del boton,  -->
-                       <button string="Cancel" class="btn-default" special="cancel" />
-                   </footer>
-          </form>
+        <form string="Reporte anual de tiendas">
+          <group>
+            <field name="tienda_ids"/>
+            <field name="fecha_inicio"/>
+            <field name="fecha_final"/>
+            <field name="categoria_ids"/>
+          </group>
+          <group>
+            <field name="name" invisible="1"/>
+            <field name="archivo" readonly="1" filename="name"/>
+          </group>
+          <footer>
+            <button name="generar_excel" string="Reporte excel" type="object" class="oe_highlight"/>
+            <button string="Cancel" class="btn-default" special="cancel"/>
+          </footer>
+        </form>
       </field>
     </record>
 
-    <act_window id="action_reporte_anual_tiendas"
-      name="Generar reporte"
-      res_model="quemen_reportes.quemen_ventas_anual.wizard"
-      binding_model="quemen_reportes.quemen_ventas_anual.wizard"
-      view_mode="form"
-      target="new"
-      />
-    <!-- hola   -->
-    <menuitem
-      action="action_reporte_anual_tiendas"
-      id="quemen_reportes_anuales"
-      name="Reporte anual de tiendas"
-      parent="point_of_sale.menu_point_rep"
-      sequence="50"
-      />
+    <!-- Acción: usar record (forma correcta en Odoo 19) -->
+    <record id="action_reporte_anual_tiendas" model="ir.actions.act_window">
+      <field name="name">Generar reporte</field>
+      <field name="res_model">quemen_reportes.quemen_ventas_anual.wizard</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+      <field name="view_id" ref="view_form_quemen_ventas_anual_wizard"/>
+    </record>
+
+    <!-- Menú: después de la acción -->
+    <menuitem id="quemen_reportes_anuales"
+              name="Reporte anual de tiendas"
+              parent="point_of_sale.menu_point_rep"
+              action="action_reporte_anual_tiendas"
+              sequence="50"/>
 
   </data>
 </odoo>

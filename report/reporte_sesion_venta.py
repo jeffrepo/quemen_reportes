@@ -3,6 +3,7 @@ import logging
 
 class ReporteSesion(models.AbstractModel):
     _name = 'report.reporte_sesion_venta.reporte'
+    _description = ''
 
     nombre_reporte=''
 
