@@ -10,7 +10,7 @@
       	<field name="report_file">quemen_reportes.producto_terminado</field>
       	<field name="binding_model_id" ref="mrp.model_mrp_production"/>
       	<field name="binding_type">report</field>
-      	<field name="paperformat_id" ref="paperformat_ticket_2"/>
+      	<!-- <field name="paperformat_id" ref="paperformat_ticket_2"/> -->
       </record>
         
     </data>

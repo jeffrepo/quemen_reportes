@@ -6,7 +6,7 @@ import io
 import base64
 import dateutil.parser
 import datetime
-import locale
+# import locale
 
 class VentasAnuales(models.TransientModel):
     _name = 'quemen_reportes.quemen_ventas_anual.wizard'
@@ -18,7 +18,9 @@ class VentasAnuales(models.TransientModel):
     tienda_ids = fields.Many2many('pos.config','quemen_reporte_ventas_anual_tiendas_rel',string="Tiendas", required=True)
     name = fields.Char('File Name', size=32)
     archivo = fields.Binary('Archivo')
-    locale.setlocale(locale.LC_ALL, ("es_ES", "UTF-8"))
+    # locale.setlocale(locale.LC_ALL, ("es_ES", "UTF-8"))
+    
+
 
     def generar_excel(self):
         # Reporte Venta por familia
