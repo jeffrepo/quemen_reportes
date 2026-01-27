@@ -3,6 +3,10 @@ import logging
 
 class ReporteSesion(models.AbstractModel):
     _name = 'report.reporte_ticket_venta.reporte'
+<<<<<<< HEAD
+=======
+    _description = ' '
+>>>>>>> ed974a7 (Primeros cambios V19)
 
     nombre_reporte=''
 
@@ -354,5 +358,6 @@ class ReporteSesion(models.AbstractModel):
 class ReporteSesion1(models.AbstractModel):
     _name = 'report.quemen_reportes.reporte_ticket_ventas_informes'
     _inherit = 'report.reporte_ticket_venta.reporte'
-
+    _description = " " 
+    
     nombre_reporte = 'quemen_reportes.reporte_ticket_ventas_informes'

@@ -3,6 +3,10 @@ import logging
 
 class ReporteProduccion(models.AbstractModel):
     _name = 'report.reporte_produccion.reporte'
+<<<<<<< HEAD
+=======
+    _description = ' '
+>>>>>>> ed974a7 (Primeros cambios V19)
 
     nombre_reporte=''
 
@@ -45,5 +49,6 @@ class ReporteProduccion(models.AbstractModel):
 class ReporteProduccion1(models.AbstractModel):
     _name = 'report.quemen_reportes.reporte_produccion_productos'
     _inherit = 'report.reporte_produccion.reporte'
+    _description = " "
 
     nombre_reporte= 'quemen_reportes.reporte_produccion_productos'

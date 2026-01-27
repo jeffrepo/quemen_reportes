@@ -6,7 +6,11 @@ from odoo import api, fields, models
 
 class ReportRecibo(models.AbstractModel):
     _name ='report.recibo_pasteleria.recibo'
+<<<<<<< HEAD
 
+=======
+    _description = ' '
+>>>>>>> ed974a7 (Primeros cambios V19)
     @api.model
     def _get_report_values(self, docids, data=None):
         return self.get_report_values(docids, data)
