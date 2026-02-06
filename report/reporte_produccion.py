@@ -3,10 +3,7 @@ import logging
 
 class ReporteProduccion(models.AbstractModel):
     _name = 'report.reporte_produccion.reporte'
-<<<<<<< HEAD
-=======
     _description = ' '
->>>>>>> ed974a7 (Primeros cambios V19)
 
     nombre_reporte=''
 
